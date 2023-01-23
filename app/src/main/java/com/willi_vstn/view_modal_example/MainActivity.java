@@ -1,6 +1,8 @@
 package com.willi_vstn.view_modal_example;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -22,14 +24,23 @@ public class MainActivity extends AppCompatActivity {
 
          mainActivityViewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
 
-         //Getting initial count
-         textView.setText("You clicked me: "+mainActivityViewModel.getInitialCounter()+" times");
+         // Using Live data to get the counter
+        LiveData<Integer> count = mainActivityViewModel.getInitialCounter();
+        count.observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                textView.setText("You clicked me: "+integer+ " times");
+            }
+        });
+
+
+
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //getting current count
-                textView.setText("You clicked Me: "+mainActivityViewModel.getCounter() + " times");
+                mainActivityViewModel.getCounter();
             }
         });
     }
